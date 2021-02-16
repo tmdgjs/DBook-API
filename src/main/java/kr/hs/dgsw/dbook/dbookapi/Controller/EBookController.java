@@ -2,6 +2,7 @@ package kr.hs.dgsw.dbook.dbookapi.Controller;
 
 import kr.hs.dgsw.dbook.dbookapi.Json.CategoryResponse;
 import kr.hs.dgsw.dbook.dbookapi.Json.DefaultResponse;
+import kr.hs.dgsw.dbook.dbookapi.Json.EBookListResponse;
 import kr.hs.dgsw.dbook.dbookapi.Json.TokenResponse;
 import kr.hs.dgsw.dbook.dbookapi.Service.EBookService;
 import kr.hs.dgsw.dbook.dbookapi.Service.UserService;
@@ -39,7 +40,12 @@ public class EBookController {
 
         List<EBook> eBookList = eBookService.getSharingBookList(objToken);
 
-        return new ResponseEntity<>(eBookList,HttpStatus.OK);
+        EBookListResponse eBookListResponse = EBookListResponse.builder()
+                                                            .code(400)
+                                                            .data(eBookList)
+                                                            .build();
+
+        return new ResponseEntity<>(eBookListResponse,HttpStatus.OK);
     }
 
     @GetMapping("/files/{ebookId}")
@@ -52,7 +58,7 @@ public class EBookController {
     @GetMapping("/categorys")
     public ResponseEntity<Object> getCategoryList(@RequestParam(value = "category", required = false) Integer category){
 
-        if(category == null){
+        if(category == null){ // 카테고리가 정의되지 않으면
             List<Map<String, Object>> objMapList = new ArrayList<>();
             List<Category> categories = eBookService.getAllCategory();
 
@@ -67,7 +73,13 @@ public class EBookController {
 
             }
 
-            return new ResponseEntity<>(objMapList, HttpStatus.OK);
+            EBookListResponse eBookListResponse = EBookListResponse.builder()
+                    .code(400)
+                    .data(objMapList)
+                    .build();
+
+            return new ResponseEntity<>(eBookListResponse,HttpStatus.OK);
+
         } else {
             String strCategoryName = eBookService.getCategoryName(category);
 
@@ -79,8 +91,12 @@ public class EBookController {
             objectMap.put("categoryName", strCategoryName);
             objectMap.put("data", eBookList);
 
+            EBookListResponse eBookListResponse = EBookListResponse.builder()
+                    .code(400)
+                    .data(objectMap)
+                    .build();
 
-            return new ResponseEntity<>(objectMap, HttpStatus.OK);
+            return new ResponseEntity<>(eBookListResponse,HttpStatus.OK);
         }
 
 

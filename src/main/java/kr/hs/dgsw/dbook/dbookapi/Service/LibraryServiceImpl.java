@@ -42,7 +42,7 @@ public class LibraryServiceImpl implements LibraryService{
             myLibrary.add(eBook);
         }
 
-        libraryResponse.setObject(myLibrary);
+        libraryResponse.setData(myLibrary);
         return libraryResponse;
     }
 
@@ -55,7 +55,7 @@ public class LibraryServiceImpl implements LibraryService{
 
         User user = this.userRepository.findByEmail(userId).orElse(null);
 
-        defaultResponse.setObject(user.getLibraryName());
+        defaultResponse.setData(user.getLibraryName());
 
         return defaultResponse;
     }
